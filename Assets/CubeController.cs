@@ -82,7 +82,39 @@ public class CubeController : MonoBehaviour {
 
 	public void Example3()
 	{
-		
+		this.ttAppendLoop(1f, delegate(LoopHandler loop){
+			
+			transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
+			
+		});
+
+//		this.ttAppendLoop(1f, delegate(LoopHandler loop){
+//			
+//			transform.Rotate(new Vector3(0f, 1f, 0f) * speed * Time.deltaTime);
+//			
+//		});
+//
+//		this.ttAppendLoop(1f, delegate(LoopHandler loop){
+//			
+//			transform.Rotate(new Vector3(0f, 1f, 0f) * speed * Time.deltaTime);
+//			
+//		});
+//
+//		this.ttAppendLoop(1f, delegate(LoopHandler loop){
+//			
+//			transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
+//			
+//		});
+
+
+
+		this.ttAppend(1f, delegate(){
+			
+			renderer.material.color = Color.red;
+			
+		});
+
+		print("cuantas veces pase por aca!@");
 	}
 
 	void RotationRoutine()

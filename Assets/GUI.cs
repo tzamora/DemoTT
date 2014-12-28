@@ -23,6 +23,12 @@ public class GUI : MonoBehaviour {
 			cubeController.Example2();
 
 		}
+
+		if (GUILayout.Button ("Example 3")) {
+			
+			cubeController.Example3();
+			
+		}
 		
 	}
 }
