@@ -3,8 +3,101 @@ using System.Collections;
 
 public class CubeController : MonoBehaviour {
 
+	public float speed = 2f;
+
+	public float timeSinceStart = 0f;
+
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
+		//Example1 ();
+
+		//Example2 ();
+
+		//Example3 ();
 	}
+
+	void Update()
+	{
+		timeSinceStart += Time.deltaTime;
+	}
+
+	public void Example1()
+	{
+		// Yo le cambiaria el nombre a ttAppendDelay
+
+		this.ttAppend (1f, delegate(){
+
+			renderer.material.color = Color.yellow;
+
+		});
+
+		this.ttAppend (1f, delegate(){
+			
+			renderer.material.color = Color.red;
+			
+		});
+
+		this.ttAppend (1f, delegate(){
+			
+			renderer.material.color = Color.green;
+			
+		});
+	}
+
+	public void Example2()
+	{
+		this.ttAppend (1f, delegate(){
+
+			print ("Append set yellow color at: " + (Time.time - timeSinceStart));
+			
+			renderer.material.color = Color.yellow;
+			
+		});
+		
+		this.ttAppend (1f, delegate(){
+
+			print ("Append set red color at: " + (Time.time - timeSinceStart));
+			
+			renderer.material.color = Color.red;
+			
+		});
+
+		this.ttNow(1f, delegate(){
+
+			print ("do Now the resize : " + (Time.time - timeSinceStart));
+
+			transform.localScale = transform.localScale * 2f;
+			
+		});
+
+		this.ttAppend (1f, delegate(){
+
+			print ("Append set the green color at: " + (Time.time - timeSinceStart));
+			
+			renderer.material.color = Color.green;
+			
+		});
+	}
+
+	public void Example3()
+	{
+		
+	}
+
+	void RotationRoutine()
+	{
+
+	}
+
+	void MovementRoutine()
+	{
+		
+	}
+
+	void ChangeSizeRoutine()
+	{
+		
+	}
+
 }
