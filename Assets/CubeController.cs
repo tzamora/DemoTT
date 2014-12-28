@@ -57,15 +57,11 @@ public class CubeController : MonoBehaviour {
 		
 		this.ttAppend (1f, delegate(){
 
-			print ("Append set red color at: " + (Time.time - timeSinceStart));
-			
 			renderer.material.color = Color.red;
 			
 		});
 
 		this.ttNow(1f, delegate(){
-
-			print ("do Now the resize : " + (Time.time - timeSinceStart));
 
 			transform.localScale = transform.localScale * 2f;
 			
@@ -73,8 +69,6 @@ public class CubeController : MonoBehaviour {
 
 		this.ttAppend (1f, delegate(){
 
-			print ("Append set the green color at: " + (Time.time - timeSinceStart));
-			
 			renderer.material.color = Color.green;
 			
 		});
@@ -88,33 +82,23 @@ public class CubeController : MonoBehaviour {
 			
 		});
 
-//		this.ttAppendLoop(1f, delegate(LoopHandler loop){
-//			
-//			transform.Rotate(new Vector3(0f, 1f, 0f) * speed * Time.deltaTime);
-//			
-//		});
-//
-//		this.ttAppendLoop(1f, delegate(LoopHandler loop){
-//			
-//			transform.Rotate(new Vector3(0f, 1f, 0f) * speed * Time.deltaTime);
-//			
-//		});
-//
-//		this.ttAppendLoop(1f, delegate(LoopHandler loop){
-//			
-//			transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
-//			
-//		});
-
-
-
-		this.ttAppend(1f, delegate(){
+		this.ttAppendLoop(1f, delegate(LoopHandler loop){
 			
-			renderer.material.color = Color.red;
+			transform.Rotate(new Vector3(0f, 1f, 0f) * speed * Time.deltaTime);
 			
 		});
 
-		print("cuantas veces pase por aca!@");
+		this.ttAppendLoop(1f, delegate(LoopHandler loop){
+			
+			transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
+			
+		});
+
+		this.ttAppend(1f, delegate(){
+		
+			renderer.material.color = Color.red;
+			
+		});
 	}
 
 	void RotationRoutine()

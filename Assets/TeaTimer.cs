@@ -73,6 +73,7 @@ public class TeaTask
 	public YieldInstruction atYield = null;
 	public Action callback = null;
 	public Action<LoopHandler> loopCallback = null;
+	public bool isLoop = false;
 	
 	
 	public TeaTask(float atTime, YieldInstruction atYield, Action callback)
@@ -80,12 +81,14 @@ public class TeaTask
 		this.time = atTime;
 		this.atYield = atYield;
 		this.callback = callback;
+		isLoop = false;
 	}
 
 	public TeaTask(float time, Action<LoopHandler> callback)
 	{
 		this.time = time;
 		this.atYield = null;
+		isLoop = true;
 		this.loopCallback = callback;
 	}
 }
@@ -129,8 +132,7 @@ public static class TeaTimer
 	/// Holds the locked queues by instance.
 	/// </summary>
 	private static Dictionary<MonoBehaviour, List<string>> lockedQueue;
-	
-	
+
 	/// <summary>
 	/// Prepares the main queue for the instance.
 	/// </summary>
@@ -195,7 +197,7 @@ public static class TeaTimer
 		// Ignore locked queues
 		if (IsLocked(instance, queueName))
 			return instance;
-		
+
 		InitInstanceQueue(instance);
 		InitInstanceLastQueueName(instance);
 		
@@ -209,7 +211,7 @@ public static class TeaTimer
 		taskList.Add(new TeaTask(atTime, atYield, callback));
 		
 		// Execute queue
-		instance.StartCoroutine(ExecuteQueue(instance, queueName, false));
+		instance.StartCoroutine(ExecuteQueue(instance, queueName));
 		
 		return instance;
 	}
@@ -241,7 +243,7 @@ public static class TeaTimer
 		taskList.Add(new TeaTask(duration, callback));
 		
 		// Execute queue
-		instance.StartCoroutine(ExecuteQueue(instance, queueName, true));
+		instance.StartCoroutine(ExecuteQueue(instance, queueName));
 		
 		return instance;
 	}
@@ -281,6 +283,7 @@ public static class TeaTimer
 	/// </summary>
 	public static MonoBehaviour ttAppend(this MonoBehaviour instance, YieldInstruction atYield, Action callback)
 	{
+
 		InitInstanceLastQueueName(instance);
 		
 		return instance.ttAppend(lastQueueName[instance], 0, atYield, callback);
@@ -384,7 +387,7 @@ public static class TeaTimer
 	/// <summary>
 	/// Execute all callbacks in the instance queue.
 	/// </summary>
-	private static IEnumerator ExecuteQueue(MonoBehaviour instance, string queueName, bool isLoop)
+	private static IEnumerator ExecuteQueue(MonoBehaviour instance, string queueName)
 	{
 		// Ignore empty task
 		if (queue.ContainsKey(instance) == false)
@@ -413,7 +416,7 @@ public static class TeaTimer
 		foreach (TeaTask c in batch)
 		{
 			// Execute & remove tasks
-			if(isLoop)
+			if(c.isLoop)
 			{
 				yield return instance.StartCoroutine(ExecuteLoop(c.time, c.loopCallback));
 			}
@@ -431,7 +434,7 @@ public static class TeaTimer
 		// or remove any current locks for the queue
 		if (queue[instance][queueName].Count > 0)
 		{
-			instance.StartCoroutine(ExecuteQueue(instance, queueName, isLoop));
+			instance.StartCoroutine(ExecuteQueue(instance, queueName));
 		}
 		else
 		{
@@ -502,9 +505,9 @@ public static class TeaTimer
 			
 			if (callback != null)
 			{
-				
+				Debug.Log("estoy a punto de llamar a un metodo!! porfa! " + callback);
+
 				callback(loopHandler);
-				
 			}
 			
 			yield return null;
