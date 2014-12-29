@@ -101,6 +101,8 @@ public class LoopHandler
 	public bool BreakLoop = false;
 	
 	public float t = 0f;
+
+	public float timeSinceStart = 0f;
 	
 	public void ExitLoop()
 	{
@@ -358,7 +360,7 @@ public static class TeaTimer
 		
 		if (lastQueueName.ContainsKey(instance) == false)
 			lastQueueName[instance] = "TEATIMER_DEFAULT_QUEUE_NAME";
-		
+
 		return instance.ttAppendLoop(lastQueueName[instance], duration, callback);
 	}
 	
@@ -418,7 +420,22 @@ public static class TeaTimer
 			// Execute & remove tasks
 			if(c.isLoop)
 			{
-				yield return instance.StartCoroutine(ExecuteLoop(c.time, c.loopCallback));
+				if(c.time > 0)
+				{
+					Debug.Log("Enter normal loop");
+
+					yield return instance.StartCoroutine(ExecuteLoop(c.time, c.loopCallback));
+
+					Debug.Log("Exit normal loop !!");
+				}
+				else
+				{
+					Debug.Log("Enter Infinite loop");
+
+					yield return instance.StartCoroutine(ExecuteInfiniteLoop(c.loopCallback));
+
+					Debug.Log("Exit Infinite loop");
+				}
 			}
 			else
 			{
@@ -505,8 +522,38 @@ public static class TeaTimer
 			
 			if (callback != null)
 			{
-				Debug.Log("estoy a punto de llamar a un metodo!! porfa! " + callback);
+				callback(loopHandler);
+			}
+			
+			yield return null;
+		}
+	}
 
+	/// <summary>
+	/// Executes a timed coroutine.
+	/// </summary>
+	private static IEnumerator ExecuteInfiniteLoop(Action<LoopHandler> callback)
+	{
+		float timeSinceStart = 0;
+
+		LoopHandler loopHandler = new LoopHandler();
+		
+		while(true)
+		{
+			if(loopHandler.BreakLoop)
+			{
+				break;
+			}
+			
+			timeSinceStart += Time.deltaTime;
+
+			loopHandler.timeSinceStart = timeSinceStart;
+			
+			// t will return the delta value of the linear interpolation based in the duration time
+			// but if there is no duration the t value sent will be the time since start
+			
+			if (callback != null)
+			{
 				callback(loopHandler);
 			}
 			

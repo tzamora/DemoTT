@@ -26,23 +26,46 @@ public class CubeController : MonoBehaviour {
 	{
 		// Yo le cambiaria el nombre a ttAppendDelay
 
-		this.ttAppend (1f, delegate(){
+//		this.ttAppendLoop (2f, delegate(LoopHandler loop){
+//
+//			transform.Rotate(new Vector3(0f, -1f, 0f) * Time.deltaTime * 200f);
+//
+//		});
 
-			renderer.material.color = Color.yellow;
+		this.ttAppendLoop (2f, delegate(LoopHandler loop){
 
-		});
+			transform.localScale = Vector3.Lerp(new Vector3(1f, 1f, 1f), new Vector3(2f, 2f, 2f), loop.t);
 
-		this.ttAppend (1f, delegate(){
-			
+		}).ttNow(1f, delegate(){
+
 			renderer.material.color = Color.red;
+
+		}).ttAppendLoop (2f, delegate(LoopHandler loop){
+			
+			transform.localScale = Vector3.Lerp(new Vector3(2f, 2f, 2f),new Vector3(1f, 1f, 1f), loop.t);
 			
 		});
 
-		this.ttAppend (1f, delegate(){
-			
-			renderer.material.color = Color.green;
-			
-		});
+
+
+
+//		this.ttAppend (1f, delegate(){
+//
+//			renderer.material.color = Color.yellow;
+//
+//		});
+//
+//		this.ttAppend (1f, delegate(){
+//			
+//			renderer.material.color = Color.red;
+//			
+//		});
+//
+//		this.ttAppend (1f, delegate(){
+//			
+//			renderer.material.color = Color.green;
+//			
+//		});
 	}
 
 	public void Example2()
@@ -76,44 +99,58 @@ public class CubeController : MonoBehaviour {
 
 	public void Example3()
 	{
+		// loop by certain time
 		this.ttAppendLoop(1f, delegate(LoopHandler loop){
 			
 			transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
 			
 		});
 
-		this.ttAppendLoop(1f, delegate(LoopHandler loop){
-			
+		// infinite loop
+		this.ttAppendLoop (delegate(LoopHandler rootLoop) {
+
 			transform.Rotate(new Vector3(0f, 1f, 0f) * speed * Time.deltaTime);
-			
+
+			if(rootLoop.timeSinceStart > 2f)
+			{
+				renderer.material.color = Color.red;
+				
+				rootLoop.ExitLoop ();
+			}
+
 		});
 
-		this.ttAppendLoop(1f, delegate(LoopHandler loop){
-			
+		this.ttAppendLoop(2f, delegate(LoopHandler loop){
+					
 			transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
 			
-		});
+		}).ttAppend(2f, delegate(){
 
-		this.ttAppend(1f, delegate(){
-		
-			renderer.material.color = Color.red;
+			renderer.material.color = Color.blue;
+
+		});
+	}
+
+	public void Example4()
+	{
+		Vector3 defaultScale = new Vector3 (1f, 1f, 1f);
+
+		// loop by certain time
+		this.ttAppendLoop(1f, delegate(LoopHandler loop){
+			
+			//transform.Rotate(new Vector3(0f, -1f, 0f) * speed * Time.deltaTime);
+
+			transform.localScale = Vector3.Lerp(defaultScale, defaultScale * 2f, loop.t);
+			
+		}).ttAppendLoop(1f, delegate(LoopHandler loop){
+			
+			transform.localScale = Vector3.Lerp(defaultScale * 2f, defaultScale, loop.t);
 			
 		});
 	}
 
-	void RotationRoutine()
+	public void Example5()
 	{
 
 	}
-
-	void MovementRoutine()
-	{
-		
-	}
-
-	void ChangeSizeRoutine()
-	{
-		
-	}
-
 }
